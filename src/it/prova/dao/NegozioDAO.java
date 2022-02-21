@@ -40,7 +40,7 @@ public class NegozioDAO {
 	public Negozio selectById(Long idNegozioInput) {
 
 		if (idNegozioInput == null || idNegozioInput < 1)
-			return null;
+			throw new RuntimeException("Impossibile caricare Negozio: id mancante!");
 
 		Negozio result = null;
 		try (Connection c = MyConnection.getConnection();
@@ -66,6 +66,10 @@ public class NegozioDAO {
 	}
 
 	public int insert(Negozio negozioInput) {
+
+		if (negozioInput == null)
+			throw new RuntimeException("Impossibile inserire Negozio: input mancante!");
+
 		int result = 0;
 		try (Connection c = MyConnection.getConnection();
 				PreparedStatement ps = c.prepareStatement("INSERT INTO negozio (nome, indirizzo) VALUES (?, ?)")) {

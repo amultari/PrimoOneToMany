@@ -19,9 +19,8 @@ public class ArticoloDAO {
 
 		try (Connection c = MyConnection.getConnection();
 				Statement s = c.createStatement();
-				//STRATEGIA EAGER FETCHING
-				ResultSet rs = s
-						.executeQuery("select * from articolo a inner join negozio n on n.id=a.negozio_id")) {
+				// STRATEGIA EAGER FETCHING
+				ResultSet rs = s.executeQuery("select * from articolo a inner join negozio n on n.id=a.negozio_id")) {
 
 			while (rs.next()) {
 				Articolo articoloTemp = new Articolo();
@@ -40,16 +39,16 @@ public class ArticoloDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			//rilancio in modo tale da avvertire il chiamante
+			// rilancio in modo tale da avvertire il chiamante
 			throw new RuntimeException(e);
 		}
 		return result;
 	}
-	
+
 	public Articolo selectById(Long idArticoloInput) {
 
 		if (idArticoloInput == null || idArticoloInput < 1)
-			return null;
+			throw new RuntimeException("Impossibile recuperare Articolo: id mancante!");
 
 		Articolo result = null;
 		try (Connection c = MyConnection.getConnection();
@@ -69,7 +68,7 @@ public class ArticoloDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			//rilancio in modo tale da avvertire il chiamante
+			// rilancio in modo tale da avvertire il chiamante
 			throw new RuntimeException(e);
 		}
 		return result;
@@ -78,7 +77,7 @@ public class ArticoloDAO {
 	public int insert(Articolo articoloInput) {
 
 		if (articoloInput.getNegozio() == null || articoloInput.getNegozio().getId() < 1)
-			return -1;
+			throw new RuntimeException("Impossibile inserire Articolo: Negozio mancante!");
 
 		int result = 0;
 		try (Connection c = MyConnection.getConnection();
@@ -91,14 +90,13 @@ public class ArticoloDAO {
 			result = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-			//rilancio in modo tale da avvertire il chiamante
+			// rilancio in modo tale da avvertire il chiamante
 			throw new RuntimeException(e);
 		}
 		return result;
 	}
 
 	// TODO
-
 	public Articolo selectByIdWithJoin(Long idInput) {
 		return null;
 	}
